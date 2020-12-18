@@ -1,0 +1,8 @@
+server:
+    port: 3999
+    origin:
+      '*'
+
+jwt:
+  secret: 'D4D8397A5539E77B94BB90387F0C4E1C9B512FF8592A60E775E3DC29A865AFA6'
+  expiresIn: 3600
