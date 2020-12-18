@@ -10,7 +10,7 @@ import { UserModule } from './user/user.module';
     TypeOrmModule.forRoot({
       type: 'mongodb',
       url:
-      'mongodb+srv://abhiram:Abhi@1999@cluster0.fdoq5.mongodb.net/RebootBE?retryWrites=true&w=majority',
+      process.env.DB||'mongodb+srv://abhiram:Abhi@1999@cluster0.fdoq5.mongodb.net/RebootBE?retryWrites=true&w=majority',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       ssl: true,
       synchronize: true,
