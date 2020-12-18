@@ -29,11 +29,15 @@ export class UserService {
     }
     throw new UnauthorizedException();
   }
-
+  async getAllUsers(): Promise<any>{
+    const users=await this.userRepository.find()
+    console.log(users)
+  }
   async validateUser(userName: string, password: string): Promise<any> {
     try {
+      console.log(userName)
       const user = await this.userRepository.findOne({
-        userName: userName,
+        userName
       });
       console.log(user);
       if (user) {
