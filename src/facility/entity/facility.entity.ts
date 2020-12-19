@@ -17,6 +17,9 @@ import {
   
     @Column()
     facilityType: any;
+
+    @Column()
+    type: any;
   
     @Column({ length: 128 })
     userName: any;

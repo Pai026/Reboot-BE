@@ -27,7 +27,13 @@ export class User {
   district:string;
 
   @Column({ length:128 })
+  ward:string;
+
+  @Column({ length:128 })
   localBody:string;
+  
+  @Column({})
+  status:any
 
   constructor(user?: Partial<User>) {
     Object.assign(this, user);

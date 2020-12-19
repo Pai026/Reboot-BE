@@ -6,6 +6,7 @@ import {
   import { AuthGuard } from '../user/strategy';
 import { facilityRegisterDto } from './dto/addFacilityDto.dto';
 import { ObjectID } from 'typeorm';
+import { patientDetailDto } from './dto/addPatientDto.dto';
   
   @ApiTags('Facility Management')
   @Controller('api/v1/facility')
@@ -19,6 +20,7 @@ import { ObjectID } from 'typeorm';
       return this.facilityService.getAllFacility();
     }
  
+   
   
   
     @ApiBearerAuth()
@@ -36,12 +38,32 @@ import { ObjectID } from 'typeorm';
       );
     }
 
-   
+    @ApiBearerAuth()
+    @UseGuards(new AuthGuard())
+    @Post('add-patient')
+    addpatient(
+      @Body() patientregisterDto: patientDetailDto,
+      @Req() req: any, @Param('facilityId') _id: string
+
+    ) {
+      this.logger.verbose('patient created');
+      console.log(patientregisterDto)
+      return this.facilityService.addpatient(
+        patientregisterDto,
+        req.user,_id
+      );
+    }
 
     @Get(':facilityId')
-    getRestaurantById(@Req() req: any, @Param('facilityId') _id: string) {
+    getFacilityById(@Req() req: any, @Param('facilityId') _id: string) {
       this.logger.verbose('facility retrieved');
       return this.facilityService.getFacilityById(req.user, _id);
+    }
+
+    @Get(':patientId')
+    getPatientById(@Req() req: any, @Param('patientId') _id: string) {
+      this.logger.verbose('patient retrieved');
+      return this.facilityService.getPatientById(req.user, _id);
     }
   
   

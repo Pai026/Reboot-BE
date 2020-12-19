@@ -37,6 +37,7 @@ export class FacilityRepository extends MongoRepository<Facility> {
     facility.contact = contact;
     facility.pincode = pincode;
     facility.oxygenCapacity = oxygenCapacity;
+    facility.type = "facility";
     facility.latitude = latitude;
     facility.longitude = longitude;
     facility.password = await bcrypt.hash(facilityName, 10);
@@ -85,6 +86,7 @@ export class FacilityRepository extends MongoRepository<Facility> {
     const patient = new Patient();
     patient.userName = userName;
     patient.address = address;
+    patient.type = "user";
     patient.state = state;
     patient.district = district;
     patient.facilityID = id;
@@ -105,14 +107,20 @@ export class FacilityRepository extends MongoRepository<Facility> {
     patient.NoOfAgedDependants = NoOfAgedDependants;
     patient.allergies = allergies;
     patient.travelHistory = travelHistory;
+    patient.status = 'patient'
     const user = await userRepository.findOne({ phoneNumber:contact,dob:dob})
     if(!user)
     {
-        patient.password = await bcrypt.has(userName, 10);
+        patient.password = await bcrypt.hash(userName, 10);
         await userRepository.save(patient);
         console.log(patient);
 
         return patient;
+    }
+    else
+    {
+      user.status = 'patient'
+      await userRepository.save(user);
     }
   
 }

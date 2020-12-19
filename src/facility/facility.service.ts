@@ -106,15 +106,25 @@ import { FacilityRepository } from './facility.repository';
     
     async getFacilityById(user: User, id): Promise<any> {
         try {
-          const restaurant = await this.facilityRepository.findOne(ObjectId(id));
-          if (restaurant) {
-            return restaurant;
+          const facility = await this.facilityRepository.findOne(ObjectId(id));
+          if (facility) {
+            return facility;
           } else {
-            throw new NotFoundException('No Such Restaurant');
+            throw new NotFoundException('No Such facility');
           }
         } catch (e) {}
       }
    
+      async getPatientById(user: User, id): Promise<any> {
+        try {
+          const patient = await this.userRepository.findOne(ObjectId(id));
+          if (patient) {
+            return patient;
+          } else {
+            throw new NotFoundException('No Such Patient');
+          }
+        } catch (e) {}
+      }
   
     
   }
