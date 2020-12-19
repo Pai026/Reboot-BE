@@ -18,6 +18,9 @@ export class UpdateConsultationDto {
   advice:string
 
   @ApiProperty({ example:null })
+  decision:string
+
+  @ApiProperty({ example:null })
   prescription:string
 
   @ApiProperty({ example:null })

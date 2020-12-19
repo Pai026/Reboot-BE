@@ -11,11 +11,11 @@ import {
 export class RegisterDto {
   @ApiProperty({ example: null })
   @IsString()
-  name: string;
+  userName: string;
 
   @ApiProperty({ example: null })
   @IsString()
-  email: string;
+  dob: string;
 
   @ApiProperty({ required: false, example: null })
   @ApiProperty({ example: null })
@@ -32,17 +32,22 @@ export class RegisterDto {
   confirm: string;
 
   @ApiProperty({ example: null })
-  @IsString()
-  type: string;
-
-  @ApiProperty({ example: null })
   @IsNumber()
-  number: number;
+  phoneNumber: number
 
   @ApiProperty({example:null})
-  address:any;
+  state:string
 
-  @ApiProperty({ example: null })
-  @IsNumber()
-  location: number;
+  @ApiProperty({example:null})
+  ward:string
+
+  @ApiProperty({example:null})
+  district:string
+
+  @ApiProperty({example:null})
+  localBody:string
+
+  @ApiProperty({example:null})
+  address:string
+
 }

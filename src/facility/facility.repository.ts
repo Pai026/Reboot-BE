@@ -37,6 +37,7 @@ export class FacilityRepository extends MongoRepository<Facility> {
     facility.contact = contact;
     facility.pincode = pincode;
     facility.oxygenCapacity = oxygenCapacity;
+    facility.type = "facility";
     facility.latitude = latitude;
     facility.longitude = longitude;
     facility.bed = {};
@@ -51,7 +52,7 @@ export class FacilityRepository extends MongoRepository<Facility> {
   async createPatient(patientregisterDto: any, id , userRepository: UserRepository): Promise<any> {
     const {
        
-        userName,
+      userName,
       address,
       diseaseStatus,
       testType,
@@ -71,19 +72,35 @@ export class FacilityRepository extends MongoRepository<Facility> {
       localBody,
       ward,
       contact,
-      pincode,
+      
    
     } = patientregisterDto;
+
     const patient = new Patient();
+    const user = await userRepository.findOne({ phoneNumber:contact,dob:dob})
+    if(!user)
+    {
+        patient.password = await bcrypt.hash(userName, 10);
+        await userRepository.save(patient);
+        console.log(patient);
+
+        return patient;
+    }
+    else
+    {
+      user.status = 'patient'
+      await userRepository.save(user);
+    }
+    
     patient.userName = userName;
     patient.address = address;
+    patient.type = "user";
     patient.state = state;
     patient.district = district;
     patient.facilityID = id;
     patient.localBody = localBody;
     patient.ward = ward;
     patient.phoneNumber = contact;
-    patient.pincode = pincode;
     patient.diseaseStatus = diseaseStatus;
     patient.testType = testType;
     patient.dateofSample = dateofSample;
@@ -97,15 +114,8 @@ export class FacilityRepository extends MongoRepository<Facility> {
     patient.NoOfAgedDependants = NoOfAgedDependants;
     patient.allergies = allergies;
     patient.travelHistory = travelHistory;
-    const user = await userRepository.findOne({ phoneNumber:contact,dob:dob})
-    if(!user)
-    {
-        patient.password = await bcrypt.has(userName, 10);
-        await userRepository.save(patient);
-        console.log(patient);
-
-        return patient;
-    }
+    patient.status = 'patient'
+    
   
 }
 

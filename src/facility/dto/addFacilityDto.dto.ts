@@ -53,10 +53,5 @@ export class facilityRegisterDto {
   @IsNumber()
   longitude: number;
 
-  @ApiProperty({ type: addBedDto, isArray: true })
-  bed: addBedDto[];
-
-  @ApiProperty({ type: addSpecialisationDto, isArray: true })
-  doctors: addSpecialisationDto[];
   
 }

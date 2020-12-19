@@ -75,4 +75,48 @@ export class UserService {
     }
   }
 
+
+  async register(data: any): Promise<any> {
+    try {
+      if (data.password !== data.confirm) {
+        return {
+          success: false,
+          message: 'Error',
+          data: {
+            confirm: 'Password and confirm password must be same.',
+          },
+        };
+      }
+      const user = await this.userRepository.findOne({ userName:data.userName });
+      if (!user) {
+        data.password = await bcrypt.hash(data.password, 10);
+        data.status = 'Unknown';
+        data.type = 'user';
+        const registerUser = await this.userRepository.save(data);
+        const { ...result } = registerUser;
+        delete result.password;
+        delete result.confirm;
+        return {
+          success: true,
+          message: 'Success',
+          data: result,
+        };
+      }
+      return {
+        success: false,
+        message: 'Error',
+        data: {
+          uniqueId: 'User already exist, please login.',
+        },
+      };
+    } catch (e) {
+      global.console.log('err', e);
+      return {
+        success: false,
+        message: 'Something went wrong..! Registration failed.',
+      };
+    }
+
+  }
+
 }

@@ -25,6 +25,7 @@ import { ConsultationModule } from './consultation/consultation.module';
     }),
 
     FacilityModule, UserModule,
+
     ConsultationModule,
 
   ],

@@ -14,6 +14,9 @@ import {
 
     @Column()
     facilityID: any;
+
+    @Column()
+    type: any;
   
  
     @Column({ length: 128 })
@@ -72,6 +75,9 @@ import {
 
     @Column({ length: 256 })
     nationality: string;
+    
+    @Column({})
+    status:any;
 
     @Column({ length: 256 })
     allergies: string;
