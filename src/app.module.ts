@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { FacilityModule } from './facility/facility.module';
 
 import { ConsultationModule } from './consultation/consultation.module';
+import { LaboratoryModule } from './laboratory/laboratory.module';
 
 
 @Module({
@@ -27,6 +28,7 @@ import { ConsultationModule } from './consultation/consultation.module';
     FacilityModule, 
     UserModule,
     ConsultationModule,
+    LaboratoryModule,
 
   ],
   controllers: [AppController],

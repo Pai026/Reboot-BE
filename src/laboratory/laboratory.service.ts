@@ -1,39 +1,30 @@
-import {
-    Injectable,
-    Logger,
-    UnauthorizedException,
-    HttpException,
-    HttpStatus,
-    NotFoundException,
-  } from '@nestjs/common';
-  import { InjectRepository } from '@nestjs/typeorm';
-  import { UserRepository } from 'src/user/user.repository';
-  import { User } from 'src/user/entities/User.entity';
-  import { ObjectID } from 'typeorm';
-  import { IsMongoId } from 'class-validator';
-import { FacilityRepository } from './facility.repository';
-import { UserService } from 'src/user/user.service';
-  const ObjectId = require('mongodb').ObjectID;
-  import * as bcrypt from 'bcryptjs';
+import { HttpException, HttpStatus, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/User.entity';
+import { UserRepository } from 'src/user/user.repository';
+import { UserService } from 'src/user/user.service';
+import { LaboratoryRepository } from './laboratory.repository';
+const ObjectId = require('mongodb').ObjectID;
+import * as bcrypt from 'bcryptjs';
 
 
-  @Injectable()
-  export class FacilityService {
-    private logger = new Logger('Facility Service');
+@Injectable()
+export class LaboratoryService {
+    private logger = new Logger('Laboratory Service');
    
     constructor(
       
-      @InjectRepository(FacilityRepository)
+      @InjectRepository(LaboratoryRepository)
       @InjectRepository(UserRepository)
-      private readonly facilityRepository: FacilityRepository,
+      private readonly laboratoryRepository: LaboratoryRepository,
       private readonly userRepository: UserRepository,
       private readonly userService:UserService,
       private readonly jwtService: JwtService,
       ) {}
   
     async getAllFacility(): Promise<any> {
-      const facility = await this.facilityRepository.find();
+      const facility = await this.laboratoryRepository.find();
       return facility;
     }
   
@@ -75,7 +66,7 @@ import { JwtService } from '@nestjs/jwt';
       } catch (e) {}
     } */
   
-    async addfacility(data: any, user: User ): Promise<any> {
+    async addLaboratory(data: any, user: User ): Promise<any> {
       try {
         // console.log(user);
          console.log(data);
@@ -84,7 +75,7 @@ import { JwtService } from '@nestjs/jwt';
         if (user) {
           // console.log(user.id);
           data.facilityID = user.id;
-          return this.facilityRepository.createFacility(data, user.id ,  this.userRepository);
+          return this.laboratoryRepository.createLaboratory(data, user.id ,  this.userRepository);
         } else {
           throw new HttpException('Action Forbidden', HttpStatus.FORBIDDEN);
         }
@@ -99,11 +90,11 @@ import { JwtService } from '@nestjs/jwt';
          console.log(data);
          console.log(ObjectId(id))
         //  console.log(user.id);
-        const facility = await this.facilityRepository.findOne(ObjectId(id));
+        const facility = await this.laboratoryRepository.findOne(ObjectId(id));
         console.log(facility)
         if (facility) {
           
-          return this.facilityRepository.addBed(data, facility );
+          return this.laboratoryRepository.addBed(data, facility );
         } else {
           throw new HttpException('Action Forbidden', HttpStatus.FORBIDDEN);
         }
@@ -118,11 +109,11 @@ import { JwtService } from '@nestjs/jwt';
          console.log(data);
          console.log(ObjectId(id))
         //  console.log(user.id);
-        const facility = await this.facilityRepository.findOne(ObjectId(user.id));
+        const facility = await this.laboratoryRepository.findOne(ObjectId(user.id));
         console.log(facility)
         if (facility) {
           
-          return this.facilityRepository.addBed(data, facility );
+          return this.laboratoryRepository.addBed(data, facility );
         } else {
           throw new HttpException('Action Forbidden', HttpStatus.FORBIDDEN);
         }
@@ -137,11 +128,11 @@ import { JwtService } from '@nestjs/jwt';
          console.log(data);
          console.log(ObjectId(id))
         //  console.log(user.id);
-        const facility = await this.facilityRepository.findOne(ObjectId(id));
+        const facility = await this.laboratoryRepository.findOne(ObjectId(id));
         console.log(facility)
         if (facility) {
           
-          return this.facilityRepository.addDoctor(data, facility );
+          return this.laboratoryRepository.addDoctor(data, facility );
         } else {
           throw new HttpException('Action Forbidden', HttpStatus.FORBIDDEN);
         }
@@ -159,7 +150,7 @@ import { JwtService } from '@nestjs/jwt';
           if (user) {
             // console.log(user.id);
            
-            return this.facilityRepository.createPatient(data, id, this.userRepository,this.userService);
+            return this.laboratoryRepository.createPatient(data, id, this.userRepository,this.userService);
           } else {
             throw new HttpException('Action Forbidden', HttpStatus.FORBIDDEN);
           }
@@ -170,7 +161,7 @@ import { JwtService } from '@nestjs/jwt';
     
     async getFacilityById(user: User, id): Promise<any> {
         try {
-          const facility = await this.facilityRepository.findOne(ObjectId(id));
+          const facility = await this.laboratoryRepository.findOne(ObjectId(id));
           if (facility) {
             return facility;
           } else {
@@ -193,7 +184,7 @@ import { JwtService } from '@nestjs/jwt';
       async validateUser(userName: string, password: string): Promise<any> {
         try {
           console.log(userName)
-          const user = await this.facilityRepository.findOne({
+          const user = await this.laboratoryRepository.findOne({
             userName
           });
           console.log(user);
@@ -233,4 +224,3 @@ import { JwtService } from '@nestjs/jwt';
         }
       }
     }
-  
