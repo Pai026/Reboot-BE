@@ -6,7 +6,11 @@ import {
   import { AuthGuard } from '../user/strategy';
 import { facilityRegisterDto } from './dto/addFacilityDto.dto';
 import { ObjectID } from 'typeorm';
+
+import { addBedDto } from './dto/addBedDto.dto';
+
 import { patientDetailDto } from './dto/addPatientDto.dto';
+
   
   @ApiTags('Facility Management')
   @Controller('api/v1/facility')
@@ -40,6 +44,23 @@ import { patientDetailDto } from './dto/addPatientDto.dto';
 
     @ApiBearerAuth()
     @UseGuards(new AuthGuard())
+
+    @Post('add-bed/:facilityId')
+    addbed(
+      @Body() addbeddto: addBedDto,
+      @Req() req: any,
+       @Param('facilityId') _id: string)
+     {
+      this.logger.verbose('bed added');
+      console.log(addbeddto)
+      return this.facilityService.addbed(
+        addbeddto,
+        req.user,
+        _id
+      );
+    }
+
+   
     @Post('add-patient')
     addpatient(
       @Body() patientregisterDto: patientDetailDto,
@@ -53,6 +74,7 @@ import { patientDetailDto } from './dto/addPatientDto.dto';
         req.user,_id
       );
     }
+
 
     @Get(':facilityId')
     getFacilityById(@Req() req: any, @Param('facilityId') _id: string) {

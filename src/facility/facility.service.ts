@@ -85,6 +85,27 @@ import { FacilityRepository } from './facility.repository';
         return e;
       }
     }
+
+    async addbed(data: any, user: User, id): Promise<any> {
+      try {
+        // console.log(user);
+         console.log(data);
+         console.log(ObjectId(id))
+        //  console.log(user.id);
+        const facility = await this.facilityRepository.findOne(ObjectId(id));
+        console.log(facility)
+        if (facility) {
+          
+          return this.facilityRepository.addBed(data, facility );
+        } else {
+          throw new HttpException('Action Forbidden', HttpStatus.FORBIDDEN);
+        }
+      } catch (e) {
+        return e;
+      }
+    }
+
+    
   
     async addpatient(data: any, user: User ,  id): Promise<any> {
         try {
