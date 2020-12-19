@@ -26,6 +26,34 @@ export class ConsultationService {
         };
     }
 
+
+    async getUserConsultations(user:any):Promise<any>{
+        console.log(user.id)
+        const consultation = await this.consultationRepository.find({patientId:user.id})
+        console.log(consultation)
+        if(consultation.length>0)
+        {
+            return consultation
+        }
+        else
+        {
+            return "No consultation"
+        }
+    }
+
+    async getSpecificUserConsultations(id:any):Promise<any>{
+        const consultation = await this.consultationRepository.findOne(ObjectId(id))
+        if(consultation)
+        {
+            return consultation
+        }
+        else
+        {
+            return 'No Such Consultation'
+        }
+    }
+
+
     async updateConsultation(id:any,data:UpdateConsultationDto):Promise<any>{
         const consultation = await this.consultationRepository.findOne(ObjectId(id))
         if(data.symptom){

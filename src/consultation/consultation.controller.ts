@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Logger, Param, Patch, Post, Req } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Logger, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/user/strategy';
 import { ConsultationService } from './consultation.service';
 import { AddConsultationDto } from './dto';
 
@@ -22,6 +23,24 @@ export class ConsultationController {
     @Get('retrieveConsultations')
     getConsultations(){
         return this.consulationService.retrieveConsultation()
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(new AuthGuard())
+    @Get('retrieveConsultationOfUser')
+    getUserConsultations(
+      @Req() req:any
+    ){
+      return this.consulationService.getUserConsultations(req.user)
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(new AuthGuard())
+    @Get('retrieveConsultationOfUser/:id')
+    getSpecificUserConsultations(
+      @Param('id') _id:string
+    ){
+      return this.consulationService.getSpecificUserConsultations(_id)
     }
 
 

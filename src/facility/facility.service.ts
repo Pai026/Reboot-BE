@@ -16,6 +16,7 @@ import { UserService } from 'src/user/user.service';
   const ObjectId = require('mongodb').ObjectID;
   import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { addPulseMonitorDto } from './dto/addPulseMonitoring';
 
 
   @Injectable()
@@ -112,17 +113,23 @@ import { JwtService } from '@nestjs/jwt';
       }
     }
 
-    async addOximeter(data: any, user: User, id): Promise<any> {
+    async addOximeter(data: addPulseMonitorDto, user: User, id): Promise<any> {
       try {
         // console.log(user);
          console.log(data);
          console.log(ObjectId(id))
         //  console.log(user.id);
-        const facility = await this.facilityRepository.findOne(ObjectId(user.id));
+        const facility = await this.facilityRepository.findOne({id:ObjectId(user.id),type:'facility'});
         console.log(facility)
         if (facility) {
-          
-          return this.facilityRepository.addBed(data, facility );
+          const user= await this.userRepository.findOne(ObjectId(id))
+          user["spo2"]=data.spo2
+          user["pulseRate"]=data.pulseRate
+          await this.userRepository.save(user)
+          return {
+            success:true,
+            message:"entered details"
+          }
         } else {
           throw new HttpException('Action Forbidden', HttpStatus.FORBIDDEN);
         }
