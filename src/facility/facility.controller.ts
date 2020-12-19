@@ -7,6 +7,10 @@ import {
 import { facilityRegisterDto } from './dto/addFacilityDto.dto';
 import { ObjectID } from 'typeorm';
 import { patientDetailDto } from './dto/addPatientDto.dto';
+import { LoginDto } from 'src/user/dto';
+import { addSpecialisationDto } from './dto/addDoctorDto.dto';
+import { addBedDto } from './dto/addBedDto.dto';
+import { addPulseMonitorDto } from './dto/addPulseMonitoring';
   
   @ApiTags('Facility Management')
   @Controller('api/v1/facility')
@@ -19,8 +23,6 @@ import { patientDetailDto } from './dto/addPatientDto.dto';
       this.logger.verbose(`retrieving all facilities`);
       return this.facilityService.getAllFacility();
     }
- 
-   
   
   
     @ApiBearerAuth()
@@ -40,6 +42,23 @@ import { patientDetailDto } from './dto/addPatientDto.dto';
 
     @ApiBearerAuth()
     @UseGuards(new AuthGuard())
+    @Post('add-doctors/:facilityId')
+    adddoctors(
+      @Body() addSpecialisationdto: addSpecialisationDto,
+      @Req() req: any,
+       @Param('facilityId') _id: string)
+     {
+      this.logger.verbose('doctor added');
+      console.log(addSpecialisationdto)
+      return this.facilityService.adddoctor(
+        addSpecialisationdto,
+        req.user,
+        _id
+      );
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(new AuthGuard())
     @Post('add-patient')
     addpatient(
       @Body() patientregisterDto: patientDetailDto,
@@ -54,6 +73,21 @@ import { patientDetailDto } from './dto/addPatientDto.dto';
       );
     }
 
+    @Post('add-oximeterDetails/:patientId')
+    addbed(
+      @Body() addpulsemonitordto: addPulseMonitorDto,
+      @Req() req: any,
+       @Param('patientId') _id: string)
+     {
+      this.logger.verbose('details added');
+      console.log(addpulsemonitordto)
+      return this.facilityService.addOximeter(
+        addpulsemonitordto,
+        req.user,
+        _id
+      );
+    }
+
     @Get(':facilityId')
     getFacilityById(@Req() req: any, @Param('facilityId') _id: string) {
       this.logger.verbose('facility retrieved');
@@ -64,6 +98,12 @@ import { patientDetailDto } from './dto/addPatientDto.dto';
     getPatientById(@Req() req: any, @Param('patientId') _id: string) {
       this.logger.verbose('patient retrieved');
       return this.facilityService.getPatientById(req.user, _id);
+    }
+
+    @Post('login')
+    login(@Body() loginDto: LoginDto) {
+      this.logger.verbose(`user Logged in ${loginDto.userName}`);
+      return this.facilityService.login(loginDto);
     }
   
   

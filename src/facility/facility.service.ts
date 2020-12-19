@@ -12,18 +12,25 @@ import {
   import { ObjectID } from 'typeorm';
   import { IsMongoId } from 'class-validator';
 import { FacilityRepository } from './facility.repository';
+import { UserService } from 'src/user/user.service';
   const ObjectId = require('mongodb').ObjectID;
-  
+  import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
+
+
   @Injectable()
   export class FacilityService {
     private logger = new Logger('Facility Service');
-  
+   
     constructor(
+      
       @InjectRepository(FacilityRepository)
       @InjectRepository(UserRepository)
       private readonly facilityRepository: FacilityRepository,
       private readonly userRepository: UserRepository,
-    ) {}
+      private readonly userService:UserService,
+      private readonly jwtService: JwtService,
+      ) {}
   
     async getAllFacility(): Promise<any> {
       const facility = await this.facilityRepository.find();
@@ -85,6 +92,63 @@ import { FacilityRepository } from './facility.repository';
         return e;
       }
     }
+
+    async addbed(data: any, user: User, id): Promise<any> {
+      try {
+        // console.log(user);
+         console.log(data);
+         console.log(ObjectId(id))
+        //  console.log(user.id);
+        const facility = await this.facilityRepository.findOne(ObjectId(id));
+        console.log(facility)
+        if (facility) {
+          
+          return this.facilityRepository.addBed(data, facility );
+        } else {
+          throw new HttpException('Action Forbidden', HttpStatus.FORBIDDEN);
+        }
+      } catch (e) {
+        return e;
+      }
+    }
+
+    async addOximeter(data: any, user: User, id): Promise<any> {
+      try {
+        // console.log(user);
+         console.log(data);
+         console.log(ObjectId(id))
+        //  console.log(user.id);
+        const facility = await this.facilityRepository.findOne(ObjectId(id));
+        console.log(facility)
+        if (facility) {
+          
+          return this.facilityRepository.addBed(data, facility );
+        } else {
+          throw new HttpException('Action Forbidden', HttpStatus.FORBIDDEN);
+        }
+      } catch (e) {
+        return e;
+      }
+    }
+
+    async adddoctor(data: any, user: User, id): Promise<any> {
+      try {
+        // console.log(user);
+         console.log(data);
+         console.log(ObjectId(id))
+        //  console.log(user.id);
+        const facility = await this.facilityRepository.findOne(ObjectId(id));
+        console.log(facility)
+        if (facility) {
+          
+          return this.facilityRepository.addDoctor(data, facility );
+        } else {
+          throw new HttpException('Action Forbidden', HttpStatus.FORBIDDEN);
+        }
+      } catch (e) {
+        return e;
+      }
+    }
   
     async addpatient(data: any, user: User ,  id): Promise<any> {
         try {
@@ -95,7 +159,7 @@ import { FacilityRepository } from './facility.repository';
           if (user) {
             // console.log(user.id);
            
-            return this.facilityRepository.createPatient(data, user.id, this.userRepository);
+            return this.facilityRepository.createPatient(data, id, this.userRepository,this.userService);
           } else {
             throw new HttpException('Action Forbidden', HttpStatus.FORBIDDEN);
           }
@@ -125,7 +189,48 @@ import { FacilityRepository } from './facility.repository';
           }
         } catch (e) {}
       }
-  
-    
-  }
+
+      async validateUser(userName: string, password: string): Promise<any> {
+        try {
+          console.log(userName)
+          const user = await this.facilityRepository.findOne({
+            userName
+          });
+          console.log(user);
+          if (user) {
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+              return user;
+            } else {
+              return null;
+            }
+          }
+        } catch (e) {
+          console.log(e);
+          return {
+            success: false,
+            message: 'Something went wrong..! Login failed.',
+          };
+        }
+      }
+
+    async login(data:any)
+    {
+        const user = await this.validateUser(data.userName, data.password);
+        console.log(user)
+        if (user) {
+          const { userName, id, type } = user;
+          const payload = { userName, id, type  };
+          return {
+            success: true,
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            access_token: this.jwtService.sign(payload),
+          };
+        } else {
+          throw new UnauthorizedException({
+            detail: 'invalid username or password',
+          });
+        }
+      }
+    }
   

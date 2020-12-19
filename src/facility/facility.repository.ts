@@ -6,6 +6,7 @@ import { UserRepository } from 'src/user/user.repository';
 const ObjectId = require('mongodb').ObjectID;
 import * as bcrypt from 'bcryptjs';
 import { Patient } from './entity/patient.entity';
+import { UserService } from 'src/user/user.service';
 
 @EntityRepository(Facility)
 export class FacilityRepository extends MongoRepository<Facility> {
@@ -40,24 +41,16 @@ export class FacilityRepository extends MongoRepository<Facility> {
     facility.type = "facility";
     facility.latitude = latitude;
     facility.longitude = longitude;
+    facility.bed = {};
+    facility.doctors = {};
     facility.password = await bcrypt.hash(facilityName, 10);
-    for (var i = 0; i < bed.length; i++) {
-        bed[i]['bedId'] = new ObjectID();
-        bed[i]['status'] = 'AVAILABLE';
-      }
-      facility.bed = bed;
-
-      for (var i = 0; i < doctors.length; i++) {
-        doctors[i]['specializationId'] = new ObjectID();
-      }
-      facility.doctors = doctors;
-    await userRepository.save(facility);
+    await this.save(facility);
     console.log(facility);
 
     return facility;
   }
   
-  async createPatient(patientregisterDto: any, id , userRepository: UserRepository): Promise<any> {
+  async createPatient(patientregisterDto: any, id , userRepository: UserRepository, userService:UserService): Promise<any> {
     const {
        
       userName,
@@ -88,42 +81,99 @@ export class FacilityRepository extends MongoRepository<Facility> {
     const user = await userRepository.findOne({ phoneNumber:contact,dob:dob})
     if(!user)
     {
-        patient.password = await bcrypt.hash(userName, 10);
-        await userRepository.save(patient);
-        console.log(patient);
+      const data={
+        'userName':userName,
+        'dob':dob,
+        'password':userName,
+        'confirm':userName,
+        'phoneNumber':contact,
+        'state':state,
+        'district':district,
+        'ward':ward,
+        'localBody':localBody,
+        'address':address
+      }
+      const response = await userService.register(data)
+      response.status='patient'
+      if(response.success==true)
+      {
+        
+       const curuser =  response.data
+        curuser["patientHistory"]=
+        {
+          "diseaseStatus" : diseaseStatus,
+          "testType" : testType,
+          "dateofSample": dateofSample,
+          "facilityId": id,
 
-        return patient;
+          "dateOfResult": dateOfResult,
+          "dob": dob,
+          "gender": gender,
+          "bloodGroup": bloodGroup,
+          "medicalHistory": medicalHistory,
+          "nationality": nationality,
+          "ongingMedication": ongingMedication,
+          "NoOfAgedDependants": NoOfAgedDependants,
+          "allergies": allergies,
+          "travelHistory": travelHistory,
+        }
+        await userRepository.save(curuser);
+        return curuser
+      }
     }
     else
     {
       user.status = 'patient'
+      user["patientHistory"]=
+      {
+        "diseaseStatus" : diseaseStatus,
+          "testType" : testType,
+          "dateofSample": dateofSample,
+          "dateOfResult": dateOfResult,
+          "dob": dob,
+          "facilityId": id,
+          "gender": gender,
+          "bloodGroup": bloodGroup,
+          "medicalHistory": medicalHistory,
+          "nationality": nationality,
+          "ongingMedication": ongingMedication,
+          "NoOfAgedDependants": NoOfAgedDependants,
+          "allergies": allergies,
+          "travelHistory": travelHistory,
+      }
       await userRepository.save(user);
+      return user
     }
-    
-    patient.userName = userName;
-    patient.address = address;
-    patient.type = "user";
-    patient.state = state;
-    patient.district = district;
-    patient.facilityID = id;
-    patient.localBody = localBody;
-    patient.ward = ward;
-    patient.phoneNumber = contact;
-    patient.diseaseStatus = diseaseStatus;
-    patient.testType = testType;
-    patient.dateofSample = dateofSample;
-    patient.dateOfResult = dateOfResult;
-    patient.dob = dob;
-    patient.gender = gender;
-    patient.bloodGroup = bloodGroup;
-    patient.medicalHistory = medicalHistory;
-    patient.nationality = nationality;
-    patient.ongingMedication = ongingMedication;
-    patient.NoOfAgedDependants = NoOfAgedDependants;
-    patient.allergies = allergies;
-    patient.travelHistory = travelHistory;
-    patient.status = 'patient'
-    
+}
+
+async addBed(addbeddto: any, facility ): Promise<any> {
+  const {
+    bedType,
+    totalCapacity,
+    currentlyOccupied,
+  } = addbeddto;
+ 
+    console.log(facility)
+   facility.bed["bedId"] = new ObjectID();
+   facility.bed["bedType"] = bedType;
+   facility.bed["currentlyOccupied"] = currentlyOccupied;
+   await this.save(facility);
+   return facility;
+}
+
+
+async addDoctor(adddoctordto: any, facility ): Promise<any> {
+  const {
+    specialisation,
+    count,
+  } = adddoctordto;
+ 
+    console.log(facility)
+   facility.doctors["specializationId"] = new ObjectID();
+   facility.doctors["specialisation"] = specialisation;
+   facility.doctors["count"] = count;
+   await this.save(facility);
+   return facility;
   
 }
 }
