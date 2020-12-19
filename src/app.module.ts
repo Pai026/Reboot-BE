@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserModule } from './user/user.module';
+import { FacilityModule } from './facility/facility.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { UserModule } from './user/user.module';
       useUnifiedTopology: true,
       useNewUrlParser: true,
     }),
-    UserModule,
+    FacilityModule, UserModule
   ],
   controllers: [AppController],
   providers: [AppService],
