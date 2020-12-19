@@ -4,7 +4,11 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserModule } from './user/user.module';
+
+import { FacilityModule } from './facility/facility.module';
+
 import { ConsultationModule } from './consultation/consultation.module';
+
 
 @Module({
   imports: [
@@ -19,8 +23,12 @@ import { ConsultationModule } from './consultation/consultation.module';
       useUnifiedTopology: true,
       useNewUrlParser: true,
     }),
+
+    FacilityModule, UserModule
+
     UserModule,
     ConsultationModule,
+
   ],
   controllers: [AppController],
   providers: [AppService],

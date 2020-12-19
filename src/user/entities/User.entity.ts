@@ -17,6 +17,9 @@ export class User {
   @Column({ length:128 })
   phoneNumber: number;
 
+  @Column({})
+  dob:any
+  
   @Column({ length:128 })
   state: string;
 
