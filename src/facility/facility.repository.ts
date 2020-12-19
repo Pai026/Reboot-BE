@@ -39,18 +39,10 @@ export class FacilityRepository extends MongoRepository<Facility> {
     facility.oxygenCapacity = oxygenCapacity;
     facility.latitude = latitude;
     facility.longitude = longitude;
+    facility.bed = {};
+    facility.doctors = {};
     facility.password = await bcrypt.hash(facilityName, 10);
-    for (var i = 0; i < bed.length; i++) {
-        bed[i]['bedId'] = new ObjectID();
-        bed[i]['status'] = 'AVAILABLE';
-      }
-      facility.bed = bed;
-
-      for (var i = 0; i < doctors.length; i++) {
-        doctors[i]['specializationId'] = new ObjectID();
-      }
-      facility.doctors = doctors;
-    await userRepository.save(facility);
+    await this.save(facility);
     console.log(facility);
 
     return facility;
@@ -116,4 +108,21 @@ export class FacilityRepository extends MongoRepository<Facility> {
     }
   
 }
+
+async addBed(addbeddto: any, facility ): Promise<any> {
+  const {
+    bedType,
+    totalCapacity,
+    currentlyOccupied,
+  } = addbeddto;
+ 
+    console.log(facility)
+   facility.bed["bedId"] = new ObjectID();
+   facility.bed["bedType"] = bedType;
+   facility.bed["currentlyOccupied"] = currentlyOccupied;
+   await this.save(facility);
+   return facility;
+  
+}
+
 }

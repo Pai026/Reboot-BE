@@ -24,9 +24,7 @@ import { ConsultationModule } from './consultation/consultation.module';
       useNewUrlParser: true,
     }),
 
-    FacilityModule, UserModule
-
-    UserModule,
+    FacilityModule, UserModule,
     ConsultationModule,
 
   ],
