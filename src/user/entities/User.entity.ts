@@ -31,6 +31,9 @@ export class User {
 
   @Column({ length:128 })
   localBody:string;
+
+  @Column({ length:128 })
+  address:string;
   
   @Column({})
   status:any

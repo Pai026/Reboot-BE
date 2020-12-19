@@ -60,7 +60,7 @@ export class FacilityRepository extends MongoRepository<Facility> {
   async createPatient(patientregisterDto: any, id , userRepository: UserRepository): Promise<any> {
     const {
        
-        userName,
+      userName,
       address,
       diseaseStatus,
       testType,
@@ -80,34 +80,11 @@ export class FacilityRepository extends MongoRepository<Facility> {
       localBody,
       ward,
       contact,
-      pincode,
+      
    
     } = patientregisterDto;
+
     const patient = new Patient();
-    patient.userName = userName;
-    patient.address = address;
-    patient.type = "user";
-    patient.state = state;
-    patient.district = district;
-    patient.facilityID = id;
-    patient.localBody = localBody;
-    patient.ward = ward;
-    patient.phoneNumber = contact;
-    patient.pincode = pincode;
-    patient.diseaseStatus = diseaseStatus;
-    patient.testType = testType;
-    patient.dateofSample = dateofSample;
-    patient.dateOfResult = dateOfResult;
-    patient.dob = dob;
-    patient.gender = gender;
-    patient.bloodGroup = bloodGroup;
-    patient.medicalHistory = medicalHistory;
-    patient.nationality = nationality;
-    patient.ongingMedication = ongingMedication;
-    patient.NoOfAgedDependants = NoOfAgedDependants;
-    patient.allergies = allergies;
-    patient.travelHistory = travelHistory;
-    patient.status = 'patient'
     const user = await userRepository.findOne({ phoneNumber:contact,dob:dob})
     if(!user)
     {
@@ -122,6 +99,31 @@ export class FacilityRepository extends MongoRepository<Facility> {
       user.status = 'patient'
       await userRepository.save(user);
     }
+    
+    patient.userName = userName;
+    patient.address = address;
+    patient.type = "user";
+    patient.state = state;
+    patient.district = district;
+    patient.facilityID = id;
+    patient.localBody = localBody;
+    patient.ward = ward;
+    patient.phoneNumber = contact;
+    patient.diseaseStatus = diseaseStatus;
+    patient.testType = testType;
+    patient.dateofSample = dateofSample;
+    patient.dateOfResult = dateOfResult;
+    patient.dob = dob;
+    patient.gender = gender;
+    patient.bloodGroup = bloodGroup;
+    patient.medicalHistory = medicalHistory;
+    patient.nationality = nationality;
+    patient.ongingMedication = ongingMedication;
+    patient.NoOfAgedDependants = NoOfAgedDependants;
+    patient.allergies = allergies;
+    patient.travelHistory = travelHistory;
+    patient.status = 'patient'
+    
   
 }
 }

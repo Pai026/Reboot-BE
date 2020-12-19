@@ -33,7 +33,7 @@ export class RegisterDto {
 
   @ApiProperty({ example: null })
   @IsNumber()
-  number: number
+  phoneNumber: number
 
   @ApiProperty({example:null})
   state:string
@@ -46,5 +46,8 @@ export class RegisterDto {
 
   @ApiProperty({example:null})
   localBody:string
+
+  @ApiProperty({example:null})
+  address:string
 
 }
