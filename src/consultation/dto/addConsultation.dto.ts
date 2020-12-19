@@ -15,6 +15,9 @@ export class AddConsultationDto {
   treatmentSummary:string
 
   @ApiProperty({ example:null })
+  decision:string
+
+  @ApiProperty({ example:null })
   category:string
 
   @ApiProperty({ example:null })

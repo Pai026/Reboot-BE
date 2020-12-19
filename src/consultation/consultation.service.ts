@@ -46,6 +46,9 @@ export class ConsultationService {
         if(data.treatmentSummary){
             consultation.treatmentSummary=data.treatmentSummary
         }
+        if(data.decision){
+            consultation.decision=data.decision
+        }
         if(data.verifiedBy){
             consultation.verifiedBy = data.verifiedBy
         }

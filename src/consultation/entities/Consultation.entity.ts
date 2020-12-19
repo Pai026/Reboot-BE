@@ -11,6 +11,9 @@ export class Consultation {
   @Column({length:128})
   symptom: string;
 
+  @Column({length:128})
+  decision:string;
+
   @Column({ length:128 })
   examinationDetail:string
 
