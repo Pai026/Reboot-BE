@@ -73,8 +73,26 @@ import { addPulseMonitorDto } from './dto/addPulseMonitoring';
       );
     }
 
-    @Post('add-oximeterDetails/:patientId')
+    @ApiBearerAuth()
+    @UseGuards(new AuthGuard())
+
+    @Post('add-bed/:facilityId')
     addbed(
+      @Body() addbeddto: addBedDto,
+      @Req() req: any,
+       @Param('facilityId') _id: string)
+     {
+      this.logger.verbose('bed added');
+      console.log(addbeddto)
+      return this.facilityService.addbed(
+        addbeddto,
+        req.user,
+        _id
+      );
+    }
+
+    @Post('add-oximeterDetails/:patientId')
+    addPulsedetails(
       @Body() addpulsemonitordto: addPulseMonitorDto,
       @Req() req: any,
        @Param('patientId') _id: string)
