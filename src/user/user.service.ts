@@ -92,6 +92,7 @@ export class UserService {
         data.password = await bcrypt.hash(data.password, 10);
         data.status = 'Unknown';
         data.type = 'user';
+        delete data.confirm;
         const registerUser = await this.userRepository.save(data);
         const { ...result } = registerUser;
         delete result.password;
