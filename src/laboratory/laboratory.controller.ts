@@ -120,5 +120,11 @@ export class LaboratoryController {
       this.logger.verbose(`user Logged in ${loginDto.userName}`);
       return this.laboratoryService.login(loginDto);
     }
+
+    @Get("getUserByNo/:Number")
+    getUserByNumber(@Param('Number') num: number) {
+      this.logger.verbose(`Get User By Mobile Number`)
+      return this.laboratoryService.getUserByMobile(num);
+    }
 }
 

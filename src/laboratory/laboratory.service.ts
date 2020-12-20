@@ -223,4 +223,19 @@ export class LaboratoryService {
           });
         }
       }
+    
+    async getUserByMobile(num:number):Promise<any>{
+      console.log(num)
+      const user = await this.userRepository.findOne({phoneNumber:num})
+      console.log(user)
+      if(user) {
+        return user
+      }
+      else
+      {
+        throw new NotFoundException({detail:"User with this mobile number not found"})
+      }
+
     }
+
+}
