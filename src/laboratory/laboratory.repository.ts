@@ -11,8 +11,8 @@ import { Laboratory } from './entity/laboratory.entity';
 export class LaboratoryRepository extends MongoRepository<Laboratory> {
   async createLaboratory(facilityregisterDto: any, id , userRepository: UserRepository): Promise<any> {
     const {
-        laboratoryType,
-        laboratoryName,
+        facilityType,
+        facilityName,
       address,
       state,
       district,
@@ -26,8 +26,9 @@ export class LaboratoryRepository extends MongoRepository<Laboratory> {
       bed,
       doctors
     } = facilityregisterDto;
+    console.log(facilityName)
     const laboratory = new Laboratory();
-    laboratory.userName = laboratoryName;
+    laboratory.userName = facilityName;
     laboratory.address = address;
     laboratory.state = state;
     laboratory.district = district;
@@ -42,7 +43,7 @@ export class LaboratoryRepository extends MongoRepository<Laboratory> {
     laboratory.longitude = longitude;
     laboratory.bed = {};
     laboratory.doctors = {};
-    laboratory.password = await bcrypt.hash(laboratoryName, 10);
+    laboratory.password = await bcrypt.hash(facilityName, 10);
     await this.save(laboratory);
     console.log(laboratory);
 
